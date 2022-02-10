@@ -1,0 +1,148 @@
+[
+    {
+        "id": "ef939c1c3401f706",
+        "type": "tab",
+        "label": "Flow 5",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "09a4e396412318b9",
+        "type": "inject",
+        "z": "ef939c1c3401f706",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"Longitude\":6.05376,\"Latitude\":80.22041,\"Date\":\"2022-02-10\"}",
+        "payloadType": "json",
+        "x": 110,
+        "y": 80,
+        "wires": [
+            [
+                "fc5f17dcd22c62bc",
+                "07e264ac717ef53b"
+            ]
+        ]
+    },
+    {
+        "id": "07e264ac717ef53b",
+        "type": "function",
+        "z": "ef939c1c3401f706",
+        "name": "Create URL",
+        "func": "var lat = msg.payload.Latitude, lng = msg.payload.Longitude, date = msg.payload.Date;\n\nvar url = \"https://api.sunrise-sunset.org/json?lat=\"+lat+\"&lng=\"+lng+\"&date=\"+date;\nmsg.url = url;\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 190,
+        "y": 160,
+        "wires": [
+            [
+                "fcfd5ca8f4189139",
+                "59dc50655233011b"
+            ]
+        ]
+    },
+    {
+        "id": "fc5f17dcd22c62bc",
+        "type": "debug",
+        "z": "ef939c1c3401f706",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 330,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "fcfd5ca8f4189139",
+        "type": "debug",
+        "z": "ef939c1c3401f706",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 390,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "59dc50655233011b",
+        "type": "http request",
+        "z": "ef939c1c3401f706",
+        "name": "Call API",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "x": 280,
+        "y": 240,
+        "wires": [
+            [
+                "d25b34a01de21339"
+            ]
+        ]
+    },
+    {
+        "id": "d25b34a01de21339",
+        "type": "function",
+        "z": "ef939c1c3401f706",
+        "name": "Process API Response",
+        "func": "jsonObj = msg.payload;\n\nvar Status = jsonObj[\"status\"];\nif (Status == \"OK\")\n{\ndelete msg.payload.status;\n\nvar day_length = jsonObj.results[\"day_length\"];\nvar time_stamp = day_length.split(\":\")\nvar hour = time_stamp[0]\nvar min = time_stamp[1]\n\nif(min>30)\n{\n    hour++;\n}\n\njsonObj.results.day_length_rounded = hour;\n\n}\n\nmsg.payload = jsonObj\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 490,
+        "y": 240,
+        "wires": [
+            [
+                "c6fbc9e78dfb2cfa"
+            ]
+        ]
+    },
+    {
+        "id": "c6fbc9e78dfb2cfa",
+        "type": "debug",
+        "z": "ef939c1c3401f706",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 710,
+        "y": 240,
+        "wires": []
+    }
+]
