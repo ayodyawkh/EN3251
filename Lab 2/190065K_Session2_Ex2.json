@@ -1,0 +1,486 @@
+[
+    {
+        "id": "0907f33221f2c660",
+        "type": "tab",
+        "label": "Flow 7",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "b20d6dd50ceec982",
+        "type": "ui_gauge",
+        "z": "0907f33221f2c660",
+        "name": "",
+        "group": "39d7e2f46864901c",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Gauge",
+        "label": "units",
+        "format": "{{msg.payload.tempc}}",
+        "min": "15",
+        "max": "45",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "className": "",
+        "x": 970,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "b7ec7b2f08085603",
+        "type": "ui_button",
+        "z": "0907f33221f2c660",
+        "name": "",
+        "group": "7a4b8eb840f47867",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Reset All",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "0",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 100,
+        "y": 340,
+        "wires": [
+            [
+                "0528cd6c08584e93"
+            ]
+        ]
+    },
+    {
+        "id": "f9127dd714f302f4",
+        "type": "ui_chart",
+        "z": "0907f33221f2c660",
+        "name": "",
+        "group": "e04aac815950323c",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "label": "Temperature measurements",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1080,
+        "y": 740,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b5728ce0f1ed3098",
+        "type": "ui_toast",
+        "z": "0907f33221f2c660",
+        "position": "dialog",
+        "displayTime": "3",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 1,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "className": "",
+        "topic": "",
+        "name": "",
+        "x": 430,
+        "y": 240,
+        "wires": [
+            [
+                "ab14e1842ef13eee"
+            ]
+        ]
+    },
+    {
+        "id": "ab14e1842ef13eee",
+        "type": "function",
+        "z": "0907f33221f2c660",
+        "name": "",
+        "func": "if (msg.payload == \"OK\"){ \n    msg.payload = \" \";\n}\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 640,
+        "y": 360,
+        "wires": [
+            [
+                "c442fa92c9439bde",
+                "4316fe6e1d1b5a8c",
+                "180465a28f53055d",
+                "b20d6dd50ceec982"
+            ]
+        ]
+    },
+    {
+        "id": "8365f9f101215024",
+        "type": "ui_audio",
+        "z": "0907f33221f2c660",
+        "name": "",
+        "group": "703514108be8d315",
+        "voice": "urn:moz-tts:sapi:Microsoft Zira Desktop - English (United States)?en-US",
+        "always": "",
+        "x": 440,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "0528cd6c08584e93",
+        "type": "function",
+        "z": "0907f33221f2c660",
+        "name": "",
+        "func": " if (msg.payload == 0){\n     msg.payload = \"\";\n     msg.payload = \"Reset Button Pressed\";\n }\n \n return msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 260,
+        "y": 340,
+        "wires": [
+            [
+                "8365f9f101215024",
+                "b5728ce0f1ed3098",
+                "4a8710f1e8e91191"
+            ]
+        ]
+    },
+    {
+        "id": "23a7b9a39fcc5f48",
+        "type": "ui_button",
+        "z": "0907f33221f2c660",
+        "name": "",
+        "group": "e04aac815950323c",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Clear",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "0",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 630,
+        "y": 740,
+        "wires": [
+            [
+                "4933a5843a7b1176"
+            ]
+        ]
+    },
+    {
+        "id": "4933a5843a7b1176",
+        "type": "function",
+        "z": "0907f33221f2c660",
+        "name": "",
+        "func": "if (msg.payload == 0){\n    msg.payload = [];\n}\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 820,
+        "y": 740,
+        "wires": [
+            [
+                "f9127dd714f302f4"
+            ]
+        ]
+    },
+    {
+        "id": "4a8710f1e8e91191",
+        "type": "ui_dropdown",
+        "z": "0907f33221f2c660",
+        "name": "",
+        "label": "Cities",
+        "tooltip": "",
+        "place": "",
+        "group": "c4781da13c994dd1",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "multiple": false,
+        "options": [
+            {
+                "label": "Galle",
+                "value": "Galle",
+                "type": "str"
+            },
+            {
+                "label": "Matara",
+                "value": "Matara",
+                "type": "str"
+            },
+            {
+                "label": "Jaffna",
+                "value": "Jaffna",
+                "type": "str"
+            },
+            {
+                "label": "Colombo",
+                "value": "Colombo",
+                "type": "str"
+            },
+            {
+                "label": "Moratuwa",
+                "value": "Moratuwa",
+                "type": "str"
+            }
+        ],
+        "payload": "",
+        "topic": "topic",
+        "topicType": "msg",
+        "className": "",
+        "x": 410,
+        "y": 460,
+        "wires": [
+            [
+                "503490d4a017df07"
+            ]
+        ]
+    },
+    {
+        "id": "cbe3ade3f15b3bc1",
+        "type": "openweathermap",
+        "z": "0907f33221f2c660",
+        "name": "",
+        "wtype": "current",
+        "lon": "",
+        "lat": "",
+        "city": "",
+        "country": "",
+        "language": "en",
+        "x": 730,
+        "y": 560,
+        "wires": [
+            [
+                "4316fe6e1d1b5a8c",
+                "c442fa92c9439bde",
+                "180465a28f53055d",
+                "b20d6dd50ceec982",
+                "8d2e28c205ddccba"
+            ]
+        ]
+    },
+    {
+        "id": "503490d4a017df07",
+        "type": "function",
+        "z": "0907f33221f2c660",
+        "name": "",
+        "func": "let m = msg.payload;\nflow.set(\"city\", m);\nmsg.location = {\n    \"city\" : flow.get(\"city\"),\n    \"country\" : \"Sri Lanka\"\n}\nreturn msg;\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 540,
+        "y": 560,
+        "wires": [
+            [
+                "cbe3ade3f15b3bc1"
+            ]
+        ]
+    },
+    {
+        "id": "c442fa92c9439bde",
+        "type": "ui_text",
+        "z": "0907f33221f2c660",
+        "group": "39d7e2f46864901c",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Weather",
+        "format": "{{msg.payload.weather}}",
+        "layout": "row-spread",
+        "className": "",
+        "x": 980,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "4316fe6e1d1b5a8c",
+        "type": "ui_text",
+        "z": "0907f33221f2c660",
+        "group": "39d7e2f46864901c",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Humidity",
+        "format": "{{msg.payload.humidity}}",
+        "layout": "row-spread",
+        "className": "",
+        "x": 980,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "180465a28f53055d",
+        "type": "ui_text",
+        "z": "0907f33221f2c660",
+        "group": "39d7e2f46864901c",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Temperature",
+        "format": "{{msg.payload.tempc}} C",
+        "layout": "row-spread",
+        "className": "",
+        "x": 990,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "8d2e28c205ddccba",
+        "type": "change",
+        "z": "0907f33221f2c660",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.tempc",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 920,
+        "y": 660,
+        "wires": [
+            [
+                "f9127dd714f302f4"
+            ]
+        ]
+    },
+    {
+        "id": "39d7e2f46864901c",
+        "type": "ui_group",
+        "name": "Details",
+        "tab": "efd4a9358a3081ab",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "7a4b8eb840f47867",
+        "type": "ui_group",
+        "name": "Reset All",
+        "tab": "efd4a9358a3081ab",
+        "order": 4,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "e04aac815950323c",
+        "type": "ui_group",
+        "name": "Chart",
+        "tab": "00c5909155d344ad",
+        "order": 4,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "703514108be8d315",
+        "type": "ui_group",
+        "name": "Reset All",
+        "tab": "7bf50cdc56c4a465",
+        "order": 4,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "c4781da13c994dd1",
+        "type": "ui_group",
+        "name": "Select City",
+        "tab": "efd4a9358a3081ab",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "efd4a9358a3081ab",
+        "type": "ui_tab",
+        "name": "Tab 4",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "00c5909155d344ad",
+        "type": "ui_tab",
+        "name": "Tab 5",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "7bf50cdc56c4a465",
+        "type": "ui_tab",
+        "name": "Tab 2",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]
