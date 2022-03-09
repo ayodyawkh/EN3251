@@ -1,0 +1,507 @@
+[
+    {
+        "id": "3e43ebe566289667",
+        "type": "tab",
+        "label": "Flow 9",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "88e4e908a67b5222",
+        "type": "function",
+        "z": "3e43ebe566289667",
+        "name": "Setting Reminder",
+        "func": "var current_time =  new Date();\nvar hours = current_time.getHours();\nvar minutes = current_time.getMinutes();\nvar time = hours*60 + minutes;\nvar weekday= [\"sunday\",\"Monday\", \"Tuesday\", \"Wednesday\", \"Thursday\", \"Friday\",\"Saturday\"]\nvar date = weekday[current_time.getDay()];\n\nconst MondayTimetable = msg.payload.MondayTimetable \nconst TuesdayTimetable = msg.payload.TuesdayTimetable \nconst WednesdayTimetable = msg.payload.WednesdayTimetable\nconst ThursdayTimetable = msg.payload.ThursdayTimetable\nconst FridayTimetable = msg.payload.FridayTimetable\n\nvar Text\nfunction Lecture_Time_reminder(Timetable)\n{\n    lecture_Now = -1;\n    array_length = Timetable&&Timetable.length\n    for (var i=0;i<array_length;i++)\n    {\n        if (Timetable[i].start ==  time + 5)\n        {\n            lecture_Now = i;\n            break;\n        }\n    }\n                            \n    if (lecture_Now == -1)  \n    {\n        Text = \"\"\n    }\n    else {\n        Text = (\"In five minutes you have \" + Timetable[i].module + \" by \" + Timetable[i].lecturer + \". Get ready for the session!.\")\n    }\n    return Text\n}\n\n//finding the lecture at given time\nmsg.payload = \"\"\nvar Reminder = flow.get(\"Reminder\")\nif (Reminder == true){\n    if (date == \"Monday\")  {                   \n        msg.payload = Lecture_Time_reminder(MondayTimetable)\n    }\n    else if (date == \"Tuesday\") {                    \n        msg.payload = Lecture_Time_reminder(TuesdayTimetable)\n    }\n    else if (date == \"Wednesday\") {                    \n        msg.payload = Lecture_Time_reminder(WednesdayTimetable)\n    }\n    else if (date == \"Thursday\") {                    \n        msg.payload = Lecture_Time_reminder(ThursdayTimetable)\n    }\n    else if (date == \"Friday\") {                    \n        msg.payload = Lecture_Time_reminder(FridayTimetable)\n    }\n}\n\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 530,
+        "y": 340,
+        "wires": [
+            [
+                "c516ac1a36323827"
+            ]
+        ]
+    },
+    {
+        "id": "4296442eba19ed23",
+        "type": "ui_toast",
+        "z": "3e43ebe566289667",
+        "position": "dialog",
+        "displayTime": "3",
+        "highlight": "",
+        "sendall": true,
+        "outputs": 1,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "className": "",
+        "topic": "msg.payload",
+        "name": "",
+        "x": 930,
+        "y": 300,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "becb4f4398c49d0b",
+        "type": "ui_audio",
+        "z": "3e43ebe566289667",
+        "name": "",
+        "group": "9dcc82c208dcf119",
+        "voice": "",
+        "always": "",
+        "x": 920,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "7e7ca6f8d404c595",
+        "type": "function",
+        "z": "3e43ebe566289667",
+        "name": "Check for lectures",
+        "func": "const MondayTimetable = msg.payload.MondayTimetable \nconst TuesdayTimetable = msg.payload.TuesdayTimetable \nconst WednesdayTimetable = msg.payload.WednesdayTimetable\nconst ThursdayTimetable = msg.payload.ThursdayTimetable\nconst FridayTimetable = msg.payload.FridayTimetable\n\nvar Text\nfunction Lecture_Now(Date, time, Timetable)\n{\n    var matches = time.match(/^(\\d+):(\\d+)([AP]M)$/i);\n    var hours = Number(matches[1]);\n    var minutes = Number(matches[2]);\n    var AMPM = matches[3];\n    \n    if (AMPM == \"AM\")\n    {\n        time_Num = 60*hours + minutes;\n    }\n    else {\n        time_Num = 60*(hours+12) + minutes;\n    }\n    \n    array_length = Timetable && Timetable.length\n    lecture_Now = -1;\n    for (var i=0;i<array_length;i++)\n    {\n        if (Timetable[i].start <= time_Num && time_Num < Timetable[i].end)\n        {\n            lecture_Now = i;\n            break;\n        }\n    }\n                   \n    if (lecture_Now == -1)                   \n    {\n        Text = \"Now you have no lectures\"\n    }\n    else\n    {\n        Text = (\"Now you have \" + Timetable[i].module + \" by \" + Timetable[i].lecturer )\n    }\n    return Text   \n}\n\nvar Date = flow.get(\"Date\")\nvar Time = flow.get(\"Time\");\n\nmsg.payload = \"\"\nif (Date == \"Monday\")  {                   \n    msg.payload = Lecture_Now(Date,Time,MondayTimetable)\n}\nelse if (Date == \"Tuesday\") {                    \n    msg.payload = Lecture_Now(Date,Time,TuesdayTimetable)\n}\nelse if (Date == \"Wednesday\") {                    \n    msg.payload = Lecture_Now(Date,Time,WednesdayTimetable)\n}\nelse if (Date == \"Thursday\") {                    \n    msg.payload = Lecture_Now(Date,Time,ThursdayTimetable)\n}\nelse if (Date == \"Friday\") {                    \n    msg.payload = Lecture_Now(Date,Time,FridayTimetable)\n}\n\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 490,
+        "y": 140,
+        "wires": [
+            [
+                "01d25d6536a0ca10"
+            ]
+        ]
+    },
+    {
+        "id": "072ce327d7b682b9",
+        "type": "ui_dropdown",
+        "z": "3e43ebe566289667",
+        "name": "",
+        "label": "Set Time",
+        "tooltip": "",
+        "place": "Select option",
+        "group": "36597069aed210b0",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "multiple": false,
+        "options": [
+            {
+                "label": "",
+                "value": "08:15AM",
+                "type": "str"
+            },
+            {
+                "label": "",
+                "value": "09:15AM",
+                "type": "str"
+            },
+            {
+                "label": "",
+                "value": "10:15AM",
+                "type": "str"
+            },
+            {
+                "label": "",
+                "value": "11:15AM",
+                "type": "str"
+            },
+            {
+                "label": "",
+                "value": "12:15PM",
+                "type": "str"
+            },
+            {
+                "label": "",
+                "value": "01:15PM",
+                "type": "str"
+            },
+            {
+                "label": "",
+                "value": "02:15PM",
+                "type": "str"
+            },
+            {
+                "label": "",
+                "value": "03:15PM",
+                "type": "str"
+            },
+            {
+                "label": "",
+                "value": "04:15PM",
+                "type": "str"
+            },
+            {
+                "label": "",
+                "value": "05:15PM",
+                "type": "str"
+            },
+            {
+                "label": "",
+                "value": "06:15PM",
+                "type": "str"
+            }
+        ],
+        "payload": "",
+        "topic": "topic",
+        "topicType": "msg",
+        "className": "",
+        "x": 100,
+        "y": 140,
+        "wires": [
+            [
+                "b7e8cb34e7f36be8"
+            ]
+        ]
+    },
+    {
+        "id": "5f2f69d4d5609764",
+        "type": "ui_dropdown",
+        "z": "3e43ebe566289667",
+        "name": "",
+        "label": "Set Date",
+        "tooltip": "",
+        "place": "Select option",
+        "group": "36597069aed210b0",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "multiple": false,
+        "options": [
+            {
+                "label": "",
+                "value": "Monday",
+                "type": "str"
+            },
+            {
+                "label": "",
+                "value": "Tuesday",
+                "type": "str"
+            },
+            {
+                "label": "",
+                "value": "Wednesday",
+                "type": "str"
+            },
+            {
+                "label": "",
+                "value": "Thursday",
+                "type": "str"
+            },
+            {
+                "label": "",
+                "value": "Friday",
+                "type": "str"
+            }
+        ],
+        "payload": "",
+        "topic": "topic",
+        "topicType": "msg",
+        "className": "",
+        "x": 100,
+        "y": 60,
+        "wires": [
+            [
+                "21819fded640d2c0"
+            ]
+        ]
+    },
+    {
+        "id": "21819fded640d2c0",
+        "type": "function",
+        "z": "3e43ebe566289667",
+        "name": "Set date",
+        "func": "let m = msg.payload;\nflow.set(\"Date\", m);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 260,
+        "y": 60,
+        "wires": [
+            [
+                "7e7ca6f8d404c595"
+            ]
+        ]
+    },
+    {
+        "id": "b7e8cb34e7f36be8",
+        "type": "function",
+        "z": "3e43ebe566289667",
+        "name": "Set time",
+        "func": "let m = msg.payload;\nflow.set(\"Time\", m);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 260,
+        "y": 140,
+        "wires": [
+            [
+                "7e7ca6f8d404c595"
+            ]
+        ]
+    },
+    {
+        "id": "8e297b9ce38f35a4",
+        "type": "inject",
+        "z": "3e43ebe566289667",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "0.01",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"MondayTimetable\":[{\"module\":\"ADC lecture\",\"start\":615,\"end\":735,\"lecturer\":\"Dr. Tharaka Samarasinghe\"},{\"module\":\"DSP practicals\",\"start\":915,\"end\":1095,\"lecturer\":\"Dr. Chamira Edussooriya\"}],\"TuesdayTimetable\":[{\"module\":\"Electromagnetics lecture\",\"start\":495,\"end\":615,\"lecturer\":\"Dr. Mevan Gunawardane\"},{\"module\":\"Linear Algebra lecture\",\"start\":615,\"end\":735,\"lecturer\":\"Dr. Udaya Jayathilake\"},{\"module\":\"Electronics III lecture\",\"start\":795,\"end\":915,\"lecturer\":\"Dr. Jayathu Samarawickrama\"},{\"module\":\"Electronics III practicals\",\"start\":915,\"end\":1095,\"lecturer\":\"Dr. Jayathu Samarawickrama\"}],\"WednesdayTimetable\":[{\"module\":\"Electronics III lecture\",\"start\":495,\"end\":615,\"lecturer\":\"Dr. Jayathu Samarawickrama\"},{\"module\":\"DSP lecture\",\"start\":615,\"end\":735,\"lecturer\":\"Dr. Chamira Edussooriya\"},{\"module\":\"Image Processing lecture\",\"start\":795,\"end\":915,\"lecturer\":\"Dr. Ranga Rodrigo\"}],\"ThursdayTimetable\":[{\"module\":\"IoT lecture\",\"start\":495,\"end\":615,\"lecturer\":\"Prof. Dileeka Dias\"}],\"FridayTimetable\":[{\"module\":\"ADC lecture\",\"start\":795,\"end\":915,\"lecturer\":\"Dr. Tharaka Samarasinghe\"},{\"module\":\"Electromagnetics practicals\",\"start\":915,\"end\":1095,\"lecturer\":\"Dr. Mevan Gunawardane\"}]}",
+        "payloadType": "json",
+        "x": 270,
+        "y": 220,
+        "wires": [
+            [
+                "7e7ca6f8d404c595"
+            ]
+        ]
+    },
+    {
+        "id": "d26a7dbfdcdb647e",
+        "type": "inject",
+        "z": "3e43ebe566289667",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "60",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"MondayTimetable\":[{\"module\":\"ADC lecture\",\"start\":615,\"end\":735,\"lecturer\":\"Dr. Tharaka Samarasinghe\"},{\"module\":\"DSP practicals\",\"start\":915,\"end\":1095,\"lecturer\":\"Dr. Chamira Edussooriya\"}],\"TuesdayTimetable\":[{\"module\":\"Electromagnetics lecture\",\"start\":495,\"end\":615,\"lecturer\":\"Dr. Mevan Gunawardane\"},{\"module\":\"Linear Algebra lecture\",\"start\":615,\"end\":735,\"lecturer\":\"Dr. Udaya Jayathilake\"},{\"module\":\"Electronics III lecture\",\"start\":795,\"end\":915,\"lecturer\":\"Dr. Jayathu Samarawickrama\"},{\"module\":\"Electronics III practicals\",\"start\":915,\"end\":1095,\"lecturer\":\"Dr. Jayathu Samarawickrama\"}],\"WednesdayTimetable\":[{\"module\":\"Electronics III lecture\",\"start\":495,\"end\":615,\"lecturer\":\"Dr. Jayathu Samarawickrama\"},{\"module\":\"DSP lecture\",\"start\":615,\"end\":735,\"lecturer\":\"Dr. Chamira Edussooriya\"},{\"module\":\"Image Processing lecture\",\"start\":795,\"end\":915,\"lecturer\":\"Dr. Ranga Rodrigo\"}],\"ThursdayTimetable\":[{\"module\":\"IoT lecture\",\"start\":495,\"end\":615,\"lecturer\":\"Prof. Dileeka Dias\"}],\"FridayTimetable\":[{\"module\":\"ADC lecture\",\"start\":795,\"end\":915,\"lecturer\":\"Dr. Tharaka Samarasinghe\"},{\"module\":\"Electromagnetics practicals\",\"start\":915,\"end\":1095,\"lecturer\":\"Dr. Mevan Gunawardane\"}]}",
+        "payloadType": "json",
+        "x": 270,
+        "y": 280,
+        "wires": [
+            [
+                "88e4e908a67b5222"
+            ]
+        ]
+    },
+    {
+        "id": "0068271ae2a59f07",
+        "type": "ui_button",
+        "z": "3e43ebe566289667",
+        "name": "",
+        "group": "464d55c83b321614",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Reminder ON",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "1",
+        "payloadType": "num",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 100,
+        "y": 460,
+        "wires": [
+            [
+                "99c640ee7dade1b0",
+                "28f08d39c5be1e08"
+            ]
+        ]
+    },
+    {
+        "id": "0eb53f99d22ca13c",
+        "type": "ui_text",
+        "z": "3e43ebe566289667",
+        "group": "464d55c83b321614",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "className": "",
+        "x": 550,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "e1176bf4bff7dff1",
+        "type": "ui_button",
+        "z": "3e43ebe566289667",
+        "name": "",
+        "group": "464d55c83b321614",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Reminder OFF",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "0",
+        "payloadType": "json",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 100,
+        "y": 540,
+        "wires": [
+            [
+                "28f08d39c5be1e08",
+                "99c640ee7dade1b0"
+            ]
+        ]
+    },
+    {
+        "id": "99c640ee7dade1b0",
+        "type": "function",
+        "z": "3e43ebe566289667",
+        "name": "Set message",
+        "func": "if (msg.payload == 1){\n    return {payload:\"Reminder is ON!\"}; \n}\nif (msg.payload == 0){\n    return {payload:\"Reminder is OFF!\"};\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 540,
+        "wires": [
+            [
+                "0eb53f99d22ca13c"
+            ]
+        ]
+    },
+    {
+        "id": "28f08d39c5be1e08",
+        "type": "function",
+        "z": "3e43ebe566289667",
+        "name": "Check ON/OFF",
+        "func": "if (msg.payload == 1)\n{\n    flow.set(\"Reminder\", true)  \n}\n\nif (msg.payload == 0)\n{\n    flow.set(\"Reminder\", false)  \n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 460,
+        "wires": [
+            [
+                "88e4e908a67b5222"
+            ]
+        ]
+    },
+    {
+        "id": "c516ac1a36323827",
+        "type": "function",
+        "z": "3e43ebe566289667",
+        "name": "Check for notification  ",
+        "func": "if (msg.payload != \"\")\n{\n    return msg\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 740,
+        "y": 340,
+        "wires": [
+            [
+                "4296442eba19ed23",
+                "becb4f4398c49d0b"
+            ]
+        ]
+    },
+    {
+        "id": "01d25d6536a0ca10",
+        "type": "ui_text",
+        "z": "3e43ebe566289667",
+        "group": "a88c096f608b28bf",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "className": "",
+        "x": 670,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "9dcc82c208dcf119",
+        "type": "ui_group",
+        "name": "Outputs",
+        "tab": "bcae4e760492576e",
+        "order": 4,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "36597069aed210b0",
+        "type": "ui_group",
+        "name": "Select Date and Time",
+        "tab": "bcae4e760492576e",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "464d55c83b321614",
+        "type": "ui_group",
+        "name": "Set Reminder",
+        "tab": "bcae4e760492576e",
+        "order": 3,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "a88c096f608b28bf",
+        "type": "ui_group",
+        "name": "Lecture / Practical",
+        "tab": "bcae4e760492576e",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "bcae4e760492576e",
+        "type": "ui_tab",
+        "name": "Tab 6",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]
